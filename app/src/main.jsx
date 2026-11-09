@@ -428,6 +428,7 @@ function CoinRow({ coin, number, period, isExpanded, onToggle }) {
     ['Population ID', coin['Population ID']],
     ['Universal Coin Type ID', coin['Universal Coin Type ID']],
     ['Sum Number ID', coin['Sum Number ID']],
+    ['Каталожен номер Krause', coin['Krause Number']],
     ['Референция', coin['Coin Reference']],
     ['Обща популация', coin['Population Total'] == null
       ? null

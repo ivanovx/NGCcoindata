@@ -74,6 +74,26 @@ def get_image_path(coin, side):
     return None
 
 
+def get_krause_number(coin):
+    """Return a Krause/KM catalog number when the API provides one."""
+    krause_keys = {
+        "krause",
+        "krausenumber",
+        "krausecatalogno",
+        "krausecatalognumber",
+        "krauseno",
+        "km",
+        "kmno",
+        "kmnumber",
+        "kmcatalognumber",
+    }
+    for key, value in coin.items():
+        normalized_key = re.sub(r"[^a-z0-9]", "", key.lower())
+        if normalized_key in krause_keys and value is not None and str(value).strip():
+            return value
+    return None
+
+
 def get_grades_for_group(group_id, designation="PF"):
     """Fetch all pages for a group and return ALL grades with counts for each coin."""
     results, page = [], 1
@@ -131,6 +151,7 @@ def get_grades_for_group(group_id, designation="PF"):
                     "Is Label Coin": coin.get("isLabelCoin"),
                     "Description": coin.get("description"),
                     "Coin Reference": coin.get("coinReference"),
+                    "Krause Number": get_krause_number(coin),
                     "Population Total": coin.get("population_Total"),
                     "Date Modified": coin.get("dateModified"),
                     "Obverse Image": get_image_path(coin, "obverse"),
