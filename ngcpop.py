@@ -5,6 +5,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 
 GROUPS_URL = "https://production.api.aws.ccg-ops.com/api/coins/research/groups/"
 POP_URL = "https://production.api.aws.ccg-ops.com/api/coins/research/population"
+BULGARIA_SUBCATEGORY_ID = 292
 
 
 def fetch_json(url):
@@ -13,7 +14,7 @@ def fetch_json(url):
     return r.json()
 
 
-def get_all_group_ids(subcategory_id=187):
+def get_all_group_ids(subcategory_id=BULGARIA_SUBCATEGORY_ID):
     """Fetch all researchGroupIDs from /groups/ (paged)."""
     page, ids = 1, []
     while True:
@@ -63,6 +64,16 @@ DETAILS_KEY_RE = re.compile(r"^population_(UNC|AU|XF|VF|F|VG|G|AG|FAIR|POOR)_Det
 DETAILS_ORDER = ["UNC", "AU", "XF", "VF", "F", "VG", "G", "AG", "FAIR", "POOR"]
 
 
+def get_image_path(coin, side):
+    """Return an obverse/reverse image path when the API provides one."""
+    for key, value in coin.items():
+        normalized_key = re.sub(r"[^a-z]", "", key.lower())
+        if side in normalized_key and any(kind in normalized_key for kind in ("image", "photo")):
+            if isinstance(value, str) and value.strip():
+                return value.strip()
+    return None
+
+
 def get_grades_for_group(group_id, designation="PF"):
     """Fetch all pages for a group and return ALL grades with counts for each coin."""
     results, page = [], 1
@@ -104,6 +115,26 @@ def get_grades_for_group(group_id, designation="PF"):
                     "GroupID": group_id,
                     "Coin Name": display_name,
                     "Designation": designation,
+                    "Coin ID": coin.get("coinID"),
+                    "Population ID": coin.get("populationID"),
+                    "Universal Coin Type ID": coin.get("universalCoinTypeID"),
+                    "Sum Number ID": coin.get("sumNumID"),
+                    "Year": coin.get("year"),
+                    "Numeric Year": coin.get("numericYear"),
+                    "Denomination": coin.get("denomination"),
+                    "Mint Mark": coin.get("mintMark"),
+                    "Strike": coin.get("strike"),
+                    "Variety": coin.get("variety"),
+                    "Label Code": coin.get("labelCode"),
+                    "Is Base Coin": coin.get("isBaseCoin"),
+                    "Is Variety Coin": coin.get("isVarietyCoin"),
+                    "Is Label Coin": coin.get("isLabelCoin"),
+                    "Description": coin.get("description"),
+                    "Coin Reference": coin.get("coinReference"),
+                    "Population Total": coin.get("population_Total"),
+                    "Date Modified": coin.get("dateModified"),
+                    "Obverse Image": get_image_path(coin, "obverse"),
+                    "Reverse Image": get_image_path(coin, "reverse"),
                     "Grades": [{"Grade": g, "Count": c} for g, c, _ in grade_counts]
                 })
 
@@ -114,7 +145,7 @@ def get_grades_for_group(group_id, designation="PF"):
 
 
 def main():
-    group_ids = get_all_group_ids(subcategory_id=187)
+    group_ids = get_all_group_ids()
     print(f"Found {len(group_ids)} group IDs")
 
     all_rows = []
