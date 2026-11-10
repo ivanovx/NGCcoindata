@@ -413,6 +413,9 @@ function App() {
 function CoinRow({ coin, number, period, isExpanded, onToggle }) {
   const shownGrades = coin.Grades.slice(0, 3)
   const remainingGrades = coin.Grades.length - shownGrades.length
+  const krauseNumber = hasValue(coin['Krause Number'])
+    ? coin['Krause Number']
+    : 'Неизвестен'
   const metadata = [
     ['Година', coin.Year],
     ['Нумерична година', coin['Numeric Year']],
@@ -428,6 +431,7 @@ function CoinRow({ coin, number, period, isExpanded, onToggle }) {
     ['Population ID', coin['Population ID']],
     ['Universal Coin Type ID', coin['Universal Coin Type ID']],
     ['Sum Number ID', coin['Sum Number ID']],
+    ['Krause номер', krauseNumber],
     ['Референция', coin['Coin Reference']],
     ['Обща популация', coin['Population Total'] == null
       ? null
@@ -453,6 +457,7 @@ function CoinRow({ coin, number, period, isExpanded, onToggle }) {
           <div className="coin-name">
             <span className="row-number">{String(number).padStart(2, '0')}</span>
             <span>{coin['Coin Name']}</span>
+            <span className="krause-badge">Krause {krauseNumber}</span>
           </div>
         </td>
         <td><span className={period === 'Недатирана' ? 'period-badge undated' : 'period-badge'}>{period}</span></td>

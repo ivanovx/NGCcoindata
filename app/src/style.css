@@ -301,11 +301,15 @@
   }
 
   .coin-name {
-    @apply flex min-w-64 items-center gap-3 text-sm font-medium leading-5 text-ink;
+    @apply flex min-w-64 flex-wrap items-center gap-3 text-sm font-medium leading-5 text-ink;
   }
 
   .row-number {
     @apply font-sans text-xs text-muted/70;
+  }
+
+  .krause-badge {
+    @apply inline-flex rounded-md border border-amber-200 bg-amber-50 px-2 py-0.5 font-sans text-xs font-medium whitespace-nowrap text-amber-900;
   }
 
   .group-badge {

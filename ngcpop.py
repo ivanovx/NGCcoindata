@@ -131,6 +131,7 @@ def get_grades_for_group(group_id, designation="PF"):
                     "Is Label Coin": coin.get("isLabelCoin"),
                     "Description": coin.get("description"),
                     "Coin Reference": coin.get("coinReference"),
+                    "Krause Number": coin.get("krauseNumber"),
                     "Population Total": coin.get("population_Total"),
                     "Date Modified": coin.get("dateModified"),
                     "Obverse Image": get_image_path(coin, "obverse"),
